@@ -16,3 +16,13 @@ export class RegisterDto {
   @MinLength(8)
   password: string;
 }
+
+export class LoginDto {
+  @IsString()
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+}
