@@ -29,14 +29,12 @@ export class AuthService {
         throw new ConflictException('User already exist');
       }
 
-      const passwordHash = await bcrypt.hash(password, 10);
-
       await this.prismaService.user.create({
         data: {
           email,
           Fullname,
           lastname,
-          password: passwordHash,
+          password: await bcrypt.hash(password, 10),
         },
       });
 

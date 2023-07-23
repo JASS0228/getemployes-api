@@ -17,9 +17,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   static extractJWTFromCookie(req: Request): string {
-    if (req.cookies?.token) {
-      return req.cookies.token;
-    }
+    if (req.cookies?.token) return req.cookies.token;
+
     throw new UnauthorizedException('Invalid Authorization');
   }
 
