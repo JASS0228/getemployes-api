@@ -15,7 +15,7 @@ model User {
   Fullname String
   lastname String
   email String @unique
-  password String @db.VarChar(18)
+  password String 
   departaments Departament[] 
   employees Employee[] 
 }
