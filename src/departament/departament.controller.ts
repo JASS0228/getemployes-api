@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -36,11 +37,17 @@ export class DepartamentController {
     return this.departamentService.createDepartament(createDep, user);
   }
 
-  @Patch('createDep')
+  @Patch('updateDep/:id')
   updateDepartament(
     @Body() updateDep: updateDepartamentDto,
     @User() user: UserType,
+    @Param('id') id: string,
   ) {
-    return this.departamentService.updateDepartament(updateDep, user);
+    return this.departamentService.updateDepartament(updateDep, user, id);
+  }
+
+  @Delete('deleteDep/:id')
+  deleteDepartament(@User() user: UserType, @Param('id') id: string) {
+    return this.departamentService.deleteDepartament(user, id);
   }
 }

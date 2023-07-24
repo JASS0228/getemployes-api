@@ -16,7 +16,7 @@ model User {
   lastname String
   email String @unique
   password String 
-  departaments Departament[] 
+  departaments Departament[]
   employees Employee[] 
 }
 
@@ -27,8 +27,8 @@ model Departament {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   userID String
-  user User @relation(fields: [userID], references: [id]) 
-  employees Employee[] 
+  user User @relation(fields: [userID], references: [id],onDelete: Cascade,onUpdate: Cascade)
+  employees Employee[]
 }
 
 model Employee {
@@ -42,5 +42,5 @@ model Employee {
   userID String
   departamentID String
   user User @relation(fields: [userID], references: [id]) 
-  departament Departament @relation(fields: [departamentID], references: [id]) 
+  departament Departament @relation(fields: [departamentID], references: [id],onDelete: Cascade, onUpdate: Cascade) 
 }

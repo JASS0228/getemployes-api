@@ -139,6 +139,88 @@ export class DepartamentService {
     }
   }
 
-  //**TODO Make update Dep and Delete */
-  async updateDepartament(updateDep: updateDepartamentDto, user: UserType) {}
+  async updateDepartament(
+    updateDep: updateDepartamentDto,
+    user: UserType,
+    id: string,
+  ) {
+    try {
+      const userExists = await this.prismaService.user.findFirst({
+        where: {
+          email: user.email,
+          AND: {
+            departaments: {
+              some: {
+                id,
+              },
+            },
+          },
+        },
+        select: {
+          id: true,
+          Fullname: true,
+          lastname: true,
+          email: true,
+          departaments: true,
+        },
+      });
+
+      if (!userExists) {
+        throw new BadRequestException('This departament no exist');
+      }
+
+      const DepartamentUpdate = await this.prismaService.departament.update({
+        where: {
+          id,
+          userID: userExists.id,
+        },
+        data: {
+          name: updateDep.name,
+          description: updateDep.description,
+        },
+      });
+
+      return DepartamentUpdate;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteDepartament(user: UserType, id: string) {
+    try {
+      const userExists = await this.prismaService.user.findFirst({
+        where: {
+          email: user.email,
+          AND: {
+            departaments: {
+              some: {
+                id,
+              },
+            },
+          },
+        },
+        select: {
+          id: true,
+          Fullname: true,
+          lastname: true,
+          email: true,
+          departaments: true,
+        },
+      });
+
+      if (!userExists) {
+        throw new BadRequestException('This departament no exist');
+      }
+
+      const departamentDelete = await this.prismaService.departament.delete({
+        where: {
+          id,
+        },
+      });
+
+      return departamentDelete;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
