@@ -17,9 +17,9 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async Register(body: RegisterDto) {
+  async Register(registerBody: RegisterDto) {
     try {
-      const { Fullname, email, lastname, password } = body;
+      const { Fullname, email, lastname, password } = registerBody;
 
       const IsUserExist = await this.prismaService.user.findFirst({
         where: { email },
@@ -29,12 +29,14 @@ export class AuthService {
         throw new ConflictException('User already exist');
       }
 
+      const passwordHash = await bcrypt.hash(password, 10);
+
       await this.prismaService.user.create({
         data: {
           email,
           Fullname,
           lastname,
-          password: await bcrypt.hash(password, 10),
+          password: passwordHash,
         },
       });
 
@@ -46,9 +48,9 @@ export class AuthService {
     }
   }
 
-  async Login(body: LoginDto, response: Response) {
+  async Login(loginBody: LoginDto, response: Response) {
     try {
-      const { email, password } = body;
+      const { email, password } = loginBody;
 
       const IsUserExist = await this.prismaService.user.findFirst({
         where: { email },

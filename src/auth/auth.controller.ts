@@ -11,21 +11,30 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('register')
-  Register(@Body() body: RegisterDto) {
-    return this.authService.Register(body);
+  Register(@Body() registerBody: RegisterDto) {
+    return this.authService.Register(registerBody);
   }
 
   @Post('login')
   Login(
-    @Body() body: LoginDto,
+    @Body() loginBody: LoginDto,
     @Res({ passthrough: true }) response: Response,
   ) {
-    return this.authService.Login(body, response);
+    return this.authService.Login(loginBody, response);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   Profile(@User() user: UserType) {
     return this.authService.Profile(user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('logout')
+  LogOut(@Res({ passthrough: true }) response: Response) {
+    response.clearCookie('token');
+    return {
+      msg: 'Logout Success',
+    };
   }
 }

@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   Fullname String
   lastname String
   email String @unique
@@ -21,26 +21,26 @@ model User {
 }
 
 model Departament {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   name String
   description String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  userID Int
+  userID String
   user User @relation(fields: [userID], references: [id]) 
   employees Employee[] 
 }
 
 model Employee {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   fullname String
   lastname String
   salary String
   range String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  userID Int
-  departamentID Int
+  userID String
+  departamentID String
   user User @relation(fields: [userID], references: [id]) 
   departament Departament @relation(fields: [departamentID], references: [id]) 
 }
