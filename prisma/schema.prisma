@@ -40,7 +40,7 @@ model Employee {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   userID String
-  departamentID String
+  departamentID String?
   user User @relation(fields: [userID], references: [id]) 
-  departament Departament @relation(fields: [departamentID], references: [id],onDelete: Cascade, onUpdate: Cascade) 
+  departament Departament? @relation(fields: [departamentID], references: [id],onDelete: Cascade, onUpdate: Cascade) 
 }
