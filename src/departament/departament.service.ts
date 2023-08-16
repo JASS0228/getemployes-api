@@ -154,14 +154,16 @@ export class DepartamentService {
       const DepartamentUpdate = await this.prismaService.departament.update({
         where: {
           id,
-          userID: departamentExist.userID,
+          user: {
+            email: user.email,
+          },
         },
         data: {
           name: updateDep.name,
           description: updateDep.description,
           user: {
-            update: {
-              email: departamentExist.userID,
+            connect: {
+              email: user.email,
             },
           },
         },
@@ -169,7 +171,6 @@ export class DepartamentService {
 
       return {
         msg: 'Departament updated',
-        DepartamentUpdate,
       };
     } catch (error) {
       throw error;
@@ -208,7 +209,9 @@ export class DepartamentService {
         },
       });
 
-      return departamentDelete;
+      return {
+        msg: 'Departament deleted',
+      };
     } catch (error) {
       throw error;
     }
