@@ -108,7 +108,7 @@ export class DepartamentService {
         throw new BadRequestException('This departament is exist');
       }
 
-      await this.prismaService.departament.create({
+      const departamentCreate = await this.prismaService.departament.create({
         data: {
           name,
           description,
@@ -121,7 +121,8 @@ export class DepartamentService {
       });
 
       return {
-        msg: 'Departament created',
+        message: 'Departament created',
+        departamentCreate,
       };
     } catch (error) {
       throw error;
@@ -151,7 +152,7 @@ export class DepartamentService {
         throw new BadRequestException('This departament no exist');
       }
 
-      const DepartamentUpdate = await this.prismaService.departament.update({
+      const departamentUpdate = await this.prismaService.departament.update({
         where: {
           id,
           user: {
@@ -170,7 +171,8 @@ export class DepartamentService {
       });
 
       return {
-        msg: 'Departament updated',
+        message: 'Departament updated',
+        departamentUpdate,
       };
     } catch (error) {
       throw error;
@@ -210,7 +212,8 @@ export class DepartamentService {
       });
 
       return {
-        msg: 'Departament deleted',
+        message: 'Departament deleted',
+        departamentDelete,
       };
     } catch (error) {
       throw error;

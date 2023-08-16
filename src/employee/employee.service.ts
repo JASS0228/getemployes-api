@@ -115,7 +115,7 @@ export class EmployeeService {
         throw new BadRequestException('Departament no exist');
       }
 
-      await this.prismaService.employee.create({
+      const employeeCreate = await this.prismaService.employee.create({
         data: {
           fullname: createEmp.fullname,
           lastname: createEmp.lastname,
@@ -125,7 +125,7 @@ export class EmployeeService {
         },
       });
 
-      return { msg: 'Employee created' };
+      return { message: 'Employee created', employeeCreate };
     } catch (error) {
       throw error;
     }
@@ -174,7 +174,7 @@ export class EmployeeService {
         },
       });
 
-      return updateEmploy;
+      return { message: 'Employee updated', updateEmploy };
     } catch (error) {
       throw error;
     }
@@ -207,12 +207,12 @@ export class EmployeeService {
       throw new BadRequestException('Employee no exist');
     }
 
-    const deleteEmp = await this.prismaService.employee.delete({
+    const deleteEmployee = await this.prismaService.employee.delete({
       where: {
         id,
       },
     });
 
-    return deleteEmp;
+    return { message: 'Employee deleted', deleteEmployee };
   }
 }

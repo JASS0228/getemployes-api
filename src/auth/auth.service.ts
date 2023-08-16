@@ -41,7 +41,7 @@ export class AuthService {
       });
 
       return {
-        msg: 'User created',
+        message: 'User created',
       };
     } catch (error) {
       throw error;
@@ -72,8 +72,10 @@ export class AuthService {
         expires: new Date(Date.now() + 1000 * 3600 * 24 * 7),
       });
 
+      console.log(IsUserExist.Fullname);
+
       return {
-        msg: 'Ok',
+        message: 'User logged',
       };
     } catch (error) {
       throw error;
