@@ -19,7 +19,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   static extractJWTFromCookie(req: Request): string {
     if (req.cookies?.token) return req.cookies.token;
 
-    throw new UnauthorizedException('Invalid Authorization');
+    throw new UnauthorizedException('Invalid Accees');
   }
 
   async validate(payload: { email: string; iat: number; exp: number }) {
@@ -32,6 +32,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!userFound) {
       throw new UnauthorizedException('Invalid Authorization');
     }
-    return { email: userFound.email };
+    return { email: userFound.email, name: userFound.Fullname };
   }
 }

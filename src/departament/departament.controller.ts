@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { DepartamentService } from './departament.service';
@@ -37,7 +37,7 @@ export class DepartamentController {
     return this.departamentService.createDepartament(createDep, user);
   }
 
-  @Patch('updateDep/:id')
+  @Put('updateDep/:id')
   updateDepartament(
     @Body() updateDep: updateDepartamentDto,
     @User() user: UserType,

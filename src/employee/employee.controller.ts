@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
@@ -34,7 +34,7 @@ export class EmployeeController {
     return this.employeeService.createEmployee(createEmp, user);
   }
 
-  @Patch('updateEmployee/:id')
+  @Put('updateEmployee/:id')
   updateEmployee(
     @Body() updateEmp: updateEmployDto,
     @User() user: UserType,

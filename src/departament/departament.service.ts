@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { createDepartamentDto, updateDepartamentDto } from './dto';
 import { UserType } from 'types';
@@ -36,7 +32,6 @@ export class DepartamentService {
         id: true,
         name: true,
         description: true,
-        createdAt: true,
         _count: true,
       },
     });
@@ -100,34 +95,28 @@ export class DepartamentService {
     try {
       const { description, name } = createDep;
 
-      const userExists = await this.prismaService.user.findFirst({
+      const departamentExist = await this.prismaService.departament.findFirst({
         where: {
-          email: user.email,
-        },
-        select: {
-          id: true,
-          Fullname: true,
-          lastname: true,
-          email: true,
-          departaments: true,
+          name,
+          user: {
+            email: user.email,
+          },
         },
       });
 
-      if (!userExists) {
-        throw new BadRequestException('This user no exist');
-      }
-
-      for (let i = 0; i < userExists.departaments.length; i++) {
-        if (userExists.departaments[i].name === name) {
-          throw new BadRequestException('This name is exist in your list');
-        }
+      if (departamentExist) {
+        throw new BadRequestException('This departament is exist');
       }
 
       await this.prismaService.departament.create({
         data: {
           name,
           description,
-          userID: userExists.id,
+          user: {
+            connect: {
+              email: user.email,
+            },
+          },
         },
       });
 
@@ -167,6 +156,12 @@ export class DepartamentService {
 
       if (!userExists) {
         throw new BadRequestException('This departament no exist');
+      }
+
+      for (let i = 0; i < userExists.departaments.length; i++) {
+        if (userExists.departaments[i].name === updateDep.name) {
+          throw new BadRequestException('This name is exist in your list');
+        }
       }
 
       const DepartamentUpdate = await this.prismaService.departament.update({
