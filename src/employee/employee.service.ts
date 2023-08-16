@@ -102,23 +102,12 @@ export class EmployeeService {
       const userExists = await this.prismaService.user.findFirst({
         where: {
           email: user.email,
-          departaments: {
-            some: {
-              id: createEmp.departament,
-            },
-          },
         },
         select: {
           id: true,
           Fullname: true,
           lastname: true,
           email: true,
-          departaments: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
         },
       });
 
@@ -133,7 +122,6 @@ export class EmployeeService {
           salary: createEmp.salary,
           range: createEmp.range,
           userID: userExists.id,
-          departamentID: createEmp.departament,
         },
       });
 
@@ -145,41 +133,36 @@ export class EmployeeService {
 
   async updateEmployee(updateEmp: updateEmployDto, user: UserType, id: string) {
     try {
-      const userExist = await this.prismaService.user.findFirst({
+      const employeeExist = await this.prismaService.employee.findFirst({
         where: {
-          email: user.email,
-          employees: {
-            some: {
-              id,
-            },
-          },
-          departaments: {
-            some: {
-              id: updateEmp.departament,
-            },
-          },
-        },
-        select: {
-          id: true,
-          email: true,
-          Fullname: true,
-          lastname: true,
-          departaments: {
-            select: {
-              id: true,
-            },
+          id,
+          user: {
+            email: user.email,
           },
         },
       });
 
-      if (!userExist) {
-        throw new BadRequestException('Not Found');
+      if (!employeeExist) {
+        throw new BadRequestException('Employee no exist');
+      }
+
+      const departamentExist = await this.prismaService.departament.findFirst({
+        where: {
+          id: updateEmp.departament,
+          user: {
+            email: user.email,
+          },
+        },
+      });
+
+      if (!departamentExist) {
+        throw new BadRequestException('Departament no exist');
       }
 
       const updateEmploy = await this.prismaService.employee.update({
         where: {
           id,
-          userID: userExist.id,
+          userID: employeeExist.userID,
         },
         data: {
           fullname: updateEmp.fullname,
@@ -187,7 +170,7 @@ export class EmployeeService {
           departamentID: updateEmp.departament,
           salary: updateEmp.salary,
           range: updateEmp.range,
-          userID: userExist.id,
+          userID: employeeExist.userID,
         },
       });
 
@@ -221,7 +204,7 @@ export class EmployeeService {
     });
 
     if (!userExist) {
-      throw new BadRequestException('Not Found');
+      throw new BadRequestException('Employee no exist');
     }
 
     const deleteEmp = await this.prismaService.employee.delete({

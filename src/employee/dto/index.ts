@@ -14,7 +14,6 @@ export class createdEmployDto {
   @IsNotEmpty()
   range: string;
   @IsString()
-  @IsNotEmpty()
   @IsOptional()
   departament: string;
 }
