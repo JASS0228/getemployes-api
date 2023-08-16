@@ -134,48 +134,45 @@ export class DepartamentService {
     id: string,
   ) {
     try {
-      const userExists = await this.prismaService.user.findFirst({
+      const departamentExist = await this.prismaService.departament.findFirst({
         where: {
-          email: user.email,
-          AND: {
-            departaments: {
-              some: {
-                id,
-              },
-            },
+          id,
+          user: {
+            email: user.email,
           },
-        },
-        select: {
-          id: true,
-          Fullname: true,
-          lastname: true,
-          email: true,
-          departaments: true,
         },
       });
 
-      if (!userExists) {
-        throw new BadRequestException('This departament no exist');
+      if (departamentExist.name === updateDep.name) {
+        throw new BadRequestException('This departament is exist');
       }
 
-      for (let i = 0; i < userExists.departaments.length; i++) {
-        if (userExists.departaments[i].name === updateDep.name) {
-          throw new BadRequestException('This name is exist in your list');
-        }
+      if (!departamentExist) {
+        throw new BadRequestException('This departament no exist');
       }
 
       const DepartamentUpdate = await this.prismaService.departament.update({
         where: {
           id,
-          userID: userExists.id,
+          user: {
+            email: user.email,
+          },
         },
         data: {
           name: updateDep.name,
           description: updateDep.description,
+          user: {
+            update: {
+              email: user.email,
+            },
+          },
         },
       });
 
-      return DepartamentUpdate;
+      return {
+        msg: 'Departament updated',
+        DepartamentUpdate,
+      };
     } catch (error) {
       throw error;
     }
