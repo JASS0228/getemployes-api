@@ -143,7 +143,7 @@ export class DepartamentService {
         },
       });
 
-      if (departamentExist.name === updateDep.name) {
+      if (departamentExist?.name === updateDep.name) {
         throw new BadRequestException('This departament is exist');
       }
 
